@@ -1,0 +1,68 @@
+﻿@page "/"
+@inject NavigationManager NavigationManager
+@using RaceTo21
+<style>
+</style>
+<h1>Welcome to 21-Game</h1>
+
+<p>Rules: Here are the basic rules for playing the game of 21:</p>
+<p>1. The goal of the game is to have your cards add up to a higher value than the dealer's cards, without exceeding 21.</p>
+<p>2. Each player is dealt two cards, face up.</p>
+<p>3. Players can choose to "hit" and be dealt additional cards, or "stand" and keep their current hand.</p>
+<p>4. Face cards (kings, queens, and jacks) are worth 10 points, aces are worth 1 or 11 points, and all other cards are worth their face value.</p>
+<p>5. If a player's cards exceed 21, they lose.</p>
+
+<!-- A heading to prompt the user to enter player names -->
+<h2>Enter player names:</h2>
+<!-- A div to hold the input field for adding new players and the corresponding button -->
+<div>
+    <input type="text" @bind-value="newPlayerName" />
+    <button type="button" @onclick="AddNewPlayer">Add Player</button>
+</div>
+<!-- Check if there is at least one player added, and if so, display a form to show each player's name -->
+@if (numberOfPlayers > 0)
+{
+    <form>
+        <!-- Loop through the list of players and display their name using Bootstrap cards -->
+        @for (int i = 0; i < numberOfPlayers; i++)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Player @(i+1)</h5>
+                    <p>Hi! my name is @Game.players[i].name</p>
+                </div>
+            </div>
+        }
+    </form>
+}
+
+<!-- A heading to welcome users to the game -->
+<h1>Welcome to 21-Game</h1>
+<!-- A button to start the game -->
+<button @onclick="@(() => NavigationManager.NavigateTo("/Game"))">Start Game</button>
+
+@code {
+    // A string to store the name of the new player
+    public string newPlayerName;
+    // An integer to keep track of the number of players
+    public int numberOfPlayers = 0;
+    // A method to add a new player to the game
+    public void AddNewPlayer()
+    {
+        // Call the AddPlayer method of the Game class to add the new player to the list
+        Game.AddPlayer(newPlayerName);
+        // Set the starting point of the new player to 100
+        Game.players[numberOfPlayers].point = 100;
+        // Increment the number of players by 1
+        numberOfPlayers++;
+        // Reset the new player name input field
+        newPlayerName = string.Empty;
+        // Call the SetUpGame method of the Game class to set up the game for the new player
+        Game.SetUpGame();
+    }
+}
+
+
+
+
+
